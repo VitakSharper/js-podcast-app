@@ -1,10 +1,16 @@
-import {isValid} from './utils';
+import {isValid, createModal} from './utils';
+import {getAuthForm} from "./auth";
 import './styles.css';
 
+import {QuestionFb} from "./questionFb";
+
 const form = document.getElementById('form');
+const modalBtn = document.getElementById('modal-btn');
 const input = form.querySelector('#question-input');
 const submitBtn = form.querySelector('#submit');
 
+window.addEventListener('load', QuestionFb.renderList);
+modalBtn.addEventListener('click', openModal);
 form.addEventListener('submit', submitFormHandler);
 input.addEventListener('input', () => {
     submitBtn.disabled = !isValid(input.value);
@@ -19,10 +25,25 @@ function submitFormHandler(event) {
         };
         submitBtn.disabled = true;
         // Async request to server
-        console.log('Question: ', question)
-        input.value = '';
-        input.className = '';
-
+        QuestionFb.create(question).then(() => {
+            input.value = '';
+            input.className = '';
+            submitBtn.disabled = false;
+        });
     }
+}
 
+
+function openModal() {
+    createModal('Authorization', getAuthForm());
+    document
+        .getElementById('auth-form')
+        .addEventListener('submit', authFormHandler, {once: true})
+}
+
+function authFormHandler(event) {
+    event.preventDefault();
+    const email = event.target.querySelector('#email').value;
+    const password = event.target.querySelector('#password').value;
+    console.log(email, password)
 }

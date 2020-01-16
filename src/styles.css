@@ -48,6 +48,28 @@ button {
     }
 }
 
-.author{
+.author {
     font-size: .8rem;
+}
+
+.floating-btn {
+    position: fixed;
+    bottom: 5rem;
+    right: 5rem;
+}
+
+.modal {
+    max-width: 60rem;
+    max-height: 30rem;
+    margin: 10rem auto;
+    overflow-y: auto;
+    background: #fff;
+}
+
+.modal > h1 {
+    text-align: center;
+}
+
+.modal .modal-content {
+    padding: 1rem;
 }
