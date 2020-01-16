@@ -1,5 +1,5 @@
 import {isValid, createModal} from './utils';
-import {getAuthForm} from "./auth";
+import {getAuthForm, authWithEmailAndPassword} from "./auth";
 import './styles.css';
 
 import {QuestionFb} from "./questionFb";
@@ -43,7 +43,22 @@ function openModal() {
 
 function authFormHandler(event) {
     event.preventDefault();
+
+    const btn = event.target.querySelector('button');
     const email = event.target.querySelector('#email').value;
     const password = event.target.querySelector('#password').value;
-    console.log(email, password)
+
+    btn.disabled = true;
+    authWithEmailAndPassword(email, password)
+        .then(QuestionFb.fetch)
+        .then(renderModalAfterAuth)
+        .then(() => btn.disabled = false)
+}
+
+function renderModalAfterAuth(content) {
+    if (typeof content === 'string') {
+        createModal('Failure!', content)
+    } else {
+        createModal('Questions', QuestionFb.listToHTML(content))
+    }
 }

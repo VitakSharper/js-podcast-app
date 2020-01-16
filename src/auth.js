@@ -1,3 +1,5 @@
+import {fb} from "./constants";
+
 export function getAuthForm() {
     return `
             <form class="mui-form" id="auth-form">
@@ -19,5 +21,15 @@ export function getAuthForm() {
 }
 
 export function authWithEmailAndPassword(email, password) {
-    return fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[API_KEY]`)
+    return fetch(`${fb.authWithEmailAndPasswordUrl}${fb.apiKey}`, {
+        method: 'POST',
+        body: JSON.stringify({
+            email, password, returnSecureToken: true
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(data => data.idToken)
 }
